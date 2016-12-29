@@ -13,13 +13,27 @@ if [ "$UID" != "0" ]; then
     exit 1
 fi
 
-# Instalacion de paquete RPM
+BUILD_DIR=/tmp/rkt_install
+
+if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    # Instalacion de requisitos para construir imagenes de contenedores
+    yum install -y golang git
+    # Instalar acbuild
+    git clone https://github.com/containers/build.git
+    cd build
+    ./build
+    mv bin/acbuild /usr/bin
+fi
+
+# Instalacion de paquete RPM de rkt
 # https://coreos.com/rkt/docs/latest/distributions.html#rpm-based
-gpg --recv-key 18AD5014C99EF7E3BA5F6CE950BDD3E0FC8A365E
-wget https://github.com/coreos/rkt/releases/download/v1.21.0/rkt-1.21.0-1.x86_64.rpm
-wget https://github.com/coreos/rkt/releases/download/v1.21.0/rkt-1.21.0-1.x86_64.rpm.asc
-gpg --verify rkt-1.21.0-1.x86_64.rpm.asc
-sudo rpm -Uvh rkt-1.21.0-1.x86_64.rpm
+if ! which rkt; then
+    cd $BUILD_DIR
+    wget https://github.com/coreos/rkt/releases/download/v1.21.0/rkt-1.21.0-1.x86_64.rpm
+    sudo rpm -Uvh rkt-1.21.0-1.x86_64.rpm
+fi
 
 echo "Ejecucion de $0 finalizada a las `date +%H:%M:%S`"
 
