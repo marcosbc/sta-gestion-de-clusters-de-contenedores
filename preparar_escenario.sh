@@ -1,15 +1,25 @@
 #!/bin/bash
 
-# Instalar VirtualBox
-cd /etc/yum.repos.d
-wget http://download.virtualbox.org/virtualbox/rpm/rhel/virtualbox.repo
-yum --enablerepo=epel install -y dkms
-yum install -y VirtualBox-5.1
+# Este script se encarga de preparar el segundo escenario (ECS)
 
+echo "Ejecutando $0 a las `date +%H:%M:%S`"
 
-# Instalar Docker machine
-if [ ! -f /usr/local/bin/docker-machine ]; then
-    curl -L https://github.com/docker/machine/releases/download/v0.9.0-rc2/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine &&
-      chmod +x /tmp/docker-machine &&
-      sudo cp /tmp/docker-machine /usr/local/bin/docker-machine
+# En caso de error, no seguir con la ejecucion
+set -e
+
+# Comprobamos usuario
+if [ "$UID" != "0" ]; then
+    echo "Es necesario ejecutar este script como el usuario 'root'."
+    exit 1
 fi
+
+# Instalar PIP
+if ! which pip; then
+	wget https://bootstrap.pypa.io/get-pip.py
+	python get-pip.py
+fi
+
+# Configurar credenciales AWS (caducan el 09/01/2017)
+# TODO
+
+
