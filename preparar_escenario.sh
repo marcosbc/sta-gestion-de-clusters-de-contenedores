@@ -19,7 +19,10 @@ if ! which pip; then
 	python get-pip.py
 fi
 
-# Configurar credenciales AWS (caducan el 09/01/2017)
-# TODO
+pip install aws
+
+# Instalar ecs-cli
+sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
+echo "Configura tus claves ECS con el comando: ecs-cli configure --region us-west-2 --access-key \$AWS_ACCESS_KEY_ID --secret-key \$AWS_SECRET_ACCESS_KEY --cluster ecs-cli-demo"
 
 
