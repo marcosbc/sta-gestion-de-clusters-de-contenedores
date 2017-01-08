@@ -48,10 +48,6 @@ for LIB in apache-maven python-devel java-1.8.0-openjdk-devel zlib-devel libcurl
     yum install -y $LIB
 done
 
-# Arreglar compilacion de mesos
-cd /usr/lib64
-ln -s libsasl2.so.3 libsasl2.so.2
-
 # Compilar mesos
 if [ ! -d /opt/mesos ]; then
     mkdir /opt/mesos

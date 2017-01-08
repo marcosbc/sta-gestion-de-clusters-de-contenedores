@@ -19,7 +19,7 @@ fi
 # Instalar development tools
 yum groupinstall -y "Development Tools"
 
-yum install golang
+yum install -y golang
 
 # Compilar Docker
 if [ ! -d /tmp/docker ]; then
