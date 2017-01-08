@@ -14,7 +14,7 @@ if [ "$UID" != "0" ]; then
 fi
 
 # Actualizar paquetes con yum
-yum -y update
+#yum -y update
 
 # Aniadir el repositorio de Docker
 tee /etc/yum.repos.d/docker.repo <<-'EOF'

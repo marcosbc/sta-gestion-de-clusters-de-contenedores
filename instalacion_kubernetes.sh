@@ -1,9 +1,5 @@
 #!/bin/bash
 
-export GOROOT=/usr/local/go
-export GOPATH=/opt/go
-export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
-
 # Este script se encarga de instalar kubernetes y sus dependencias
 
 echo "Ejecutando $0 a las `date +%H:%M:%S`"
@@ -17,7 +13,21 @@ if [ "$UID" != "0" ]; then
     exit 1
 fi
 
-# Instalamos etcd
-yum -y install etcd kubernetes
+# Desactivamos SELinux
+set +e
+setenforce 0
+set -e
+
+# Instalamos Kubeadm, Kubelet, etc.
+echo "[kubernetes]
+name=Kubernetes
+baseurl=http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+       https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg" > /etc/yum.repos.d/kubernetes.repo
+yum install -y kubelet kubeadm kubectl kubernetes-cni
+systemctl enable kubelet && systemctl start kubelet
 
 echo "Ejecucion de $0 finalizada a las `date +%H:%M:%S`"
